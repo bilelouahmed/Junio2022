@@ -1,0 +1,60 @@
+name: Construcción y Pruebas
+on: [push]
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_LOGIN: ${{ github.actor }}
+      GITHUB_PACKAGES: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Clonando el repositorio y estableciendo el espacio de trabajo
+        uses: actions/checkout@v3
+      - name: Configurando java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '16'
+      - name: Construyendo el código
+        id: build
+        run: |
+          chmod +x gradlew
+          ./gradlew build -x test
+          echo "SYW-4020"
+  Test:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_LOGIN: ${{ github.actor }}
+      GITHUB_PACKAGES: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+    needs: Build
+    steps:
+      - name: Clonando el repositorio y estableciendo el espacio de trabajo
+        uses: actions/checkout@v3
+        with:
+          distribution: 'temurin'
+          java-version: '16'
+      - name: Probando el código
+        run: |
+          chmod +x gradlew
+          ./gradlew test
+          echo "SYW-4020"
+  Publish:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_LOGIN: ${{ github.actor }}
+      GITHUB_PACKAGES: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+    needs: Test
+    steps:
+      - name: Clonando el repositorio y estableciendo el espacio de trabajo
+        uses: actions/checkout@v3
+        with:
+          distribution: 'temurin'
+          java-version: '16'
+      - name: Publicando los artifactos
+        run: |
+          chmod +x gradlew
+          ./gradlew publish
+          echo "SYW-4020"
