@@ -40,3 +40,21 @@ jobs:
           chmod +x gradlew
           ./gradlew test
           echo "SYW-4020"
+  Publish:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_LOGIN: ${{ github.actor }}
+      GITHUB_PACKAGES: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+    needs: Test
+    steps:
+      - name: Clonando el repositorio y estableciendo el espacio de trabajo
+        uses: actions/checkout@v3
+        with:
+          distribution: 'temurin'
+          java-version: '16'
+      - name: Publicando los artifactos
+        run: |
+          chmod +x gradlew
+          ./gradlew publish
+          echo "SYW-4020"
