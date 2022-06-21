@@ -8,3 +8,4 @@
  */
 
 rootProject.name = 'Junio2022'
+include('lib')
