@@ -4,3 +4,36 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our samples at https://docs.gradle.org/7.4.2/samples
  */
+
+
+plugins {
+    // Apply the java-library plugin for API and implementation separation.
+    id 'java-library'
+    //para poder publicar paquetes en github
+    id 'maven-publish'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/bilelouahmed/Junio2022")
+            credentials {
+            //las propiedades gpr.user y gpr.key est�n configuradas en gradle.properties en el raiz del proyecto, y se a�ade a .gitignore para que no se suban
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+                }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+         //Del tutorial https://docs.gradle.org/current/userguide/publishing_maven.html#publishing_maven
+        
+            groupId = 'us.mitfs.samples'
+            artifactId = 'a4i'
+            version = '0.0.1-SYW4020'
+
+            from components.java
+        }
+    }
+}
