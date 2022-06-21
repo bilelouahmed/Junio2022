@@ -8,4 +8,3 @@
  */
 
 rootProject.name = 'Junio2022'
-include('app')
